@@ -6,29 +6,29 @@ import { buildHierarchyTree } from "@/utils/tree";
 import remainingRouter from "./modules/remaining";
 import { useMultiTagsStoreHook } from "@/store/modules/multiTags";
 import { usePermissionStoreHook } from "@/store/modules/permission";
-import { isUrl, openLink, storageLocal, isAllEmpty } from "@pureadmin/utils";
+import { isAllEmpty, isUrl, openLink, storageLocal } from "@pureadmin/utils";
 import {
   ascending,
-  getTopMenu,
-  initRouter,
-  isOneOfArray,
-  getHistoryMode,
   findRouteByPath,
-  handleAliveRoute,
+  formatFlatteningRoutes,
   formatTwoStageRoutes,
-  formatFlatteningRoutes
+  getHistoryMode,
+  getTopMenu,
+  handleAliveRoute,
+  initRouter,
+  isOneOfArray
 } from "./utils";
 import {
-  type Router,
   createRouter,
-  type RouteRecordRaw,
-  type RouteComponent
+  type RouteComponent,
+  type Router,
+  type RouteRecordRaw
 } from "vue-router";
 import {
   type DataInfo,
-  userKey,
+  multipleTabsKey,
   removeToken,
-  multipleTabsKey
+  userKey
 } from "@/utils/auth";
 
 /** 自动导入全部静态路由，无需再手动引入！匹配 src/router/modules 目录（任何嵌套级别）中具有 .ts 扩展名的所有文件，除了 remaining.ts 文件
@@ -113,7 +113,7 @@ router.beforeEach((to: ToRouteType, _from, next) => {
       handleAliveRoute(to);
     }
   }
-  const userInfo = storageLocal().getItem<DataInfo<number>>(userKey);
+  const userInfo = storageLocal().getItem<DataInfo>(userKey);
   NProgress.start();
   const externalLink = isUrl(to?.name as string);
   if (!externalLink) {
@@ -124,17 +124,19 @@ router.beforeEach((to: ToRouteType, _from, next) => {
       else document.title = item.meta.title as string;
     });
   }
+
   /** 如果已经登录并存在登录信息后不能跳转到路由白名单，而是继续保持在当前页面 */
   function toCorrectRoute() {
     whiteList.includes(to.fullPath) ? next(_from.fullPath) : next();
   }
+
   if (Cookies.get(multipleTabsKey) && userInfo) {
     // 无权限跳转403页面
     if (to.meta?.roles && !isOneOfArray(to.meta?.roles, userInfo?.roles)) {
       next({ path: "/error/403" });
     }
     // 开启隐藏首页后在浏览器地址栏手动输入首页welcome路由则跳转到404页面
-    if (VITE_HIDE_HOME === "true" && to.fullPath === "/welcome") {
+    if (VITE_HIDE_HOME === "true" && to.fullPath === "/index") {
       next({ path: "/error/404" });
     }
     if (_from?.name) {
