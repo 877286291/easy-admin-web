@@ -1,0 +1,39 @@
+.custom-switch {
+  display: flex;
+  align-items: center;
+
+  .el-switch {
+    --el-switch-on-color: #6abe39;
+    --el-switch-off-color: #e84749;
+  }
+
+  .el-switch__core {
+    width: 70px !important;
+  }
+
+  .el-switch__label {
+    position: absolute;
+    display: none;
+    color: #fff !important;
+  }
+
+  .el-switch__label--right {
+    z-index: 1;
+  }
+
+  .el-switch__label--right span {
+    margin-right: 18px;
+  }
+
+  .el-switch__label--left {
+    z-index: 1;
+  }
+
+  .el-switch__label--left span {
+    margin-left: 18px;
+  }
+
+  .el-switch__label.is-active {
+    display: block;
+  }
+}

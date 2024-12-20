@@ -5,6 +5,7 @@ import type { ComponentSize } from "element-plus";
 import { message } from "@/utils/message";
 import { ArrowDownBold } from "@element-plus/icons-vue";
 import UpdateUserInfo from "./components/UpdateUserInfo.vue";
+
 let current = ref(1);
 let size = ref(30);
 let total = ref(0);
@@ -57,6 +58,7 @@ const handleSwitchChange = (row: any) => {
     })
     .finally(() => (loading.value = false));
 };
+
 function handleEditUserInfo(index: number, row: UserInfo) {
   drawerVisible.value = true;
   selectUserInfo = { ...row };
@@ -70,9 +72,9 @@ function handleEditUserInfo(index: number, row: UserInfo) {
       :user-info="selectUserInfo"
     />
     <el-table
-      :loading="loading"
       :data="userList"
       :highlight-current-row="true"
+      :loading="loading"
       style="width: 100%"
       table-layout="auto"
     >
@@ -109,18 +111,15 @@ function handleEditUserInfo(index: number, row: UserInfo) {
       <el-table-column align="center" label="手机号" prop="phone" />
       <el-table-column align="center" label="状态" prop="enabled">
         <template v-slot="{ row }">
-          <el-switch
-            v-model="row.enabled"
-            :loading="loading"
-            class="customSwitch"
-            style="
-              --el-switch-on-color: #6abe39;
-              --el-switch-off-color: #e84749;
-            "
-            active-text="已启用"
-            inactive-text="已禁用"
-            @change="handleSwitchChange(row)"
-          />
+          <div class="custom-switch">
+            <el-switch
+              v-model="row.enabled"
+              :loading="loading"
+              active-text="已启用"
+              inactive-text="已禁用"
+              @change="handleSwitchChange(row)"
+            />
+          </div>
         </template>
       </el-table-column>
 
@@ -130,7 +129,7 @@ function handleEditUserInfo(index: number, row: UserInfo) {
         label="上次登录时间"
         prop="lastLoginTime"
       />
-      <el-table-column label="操作" align="center" width="180px">
+      <el-table-column align="center" label="操作" width="180px">
         <template #default="scope">
           <el-link
             type="primary"
@@ -139,12 +138,14 @@ function handleEditUserInfo(index: number, row: UserInfo) {
             修改
           </el-link>
           <el-divider direction="vertical" />
-          <el-link type="danger"> 删除 </el-link>
+          <el-link type="danger"> 删除</el-link>
           <el-divider direction="vertical" />
           <el-link type="primary">
             更多
-            <el-icon> <ArrowDownBold /> </el-icon
-          ></el-link>
+            <el-icon>
+              <ArrowDownBold />
+            </el-icon>
+          </el-link>
         </template>
       </el-table-column>
     </el-table>
@@ -154,8 +155,8 @@ function handleEditUserInfo(index: number, row: UserInfo) {
         v-model:page-size="size"
         :page-sizes="[30, 50, 100]"
         :size="pageSize"
-        layout="sizes, prev, pager, next"
         :total="total"
+        layout="sizes, prev, pager, next"
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
       />
@@ -163,43 +164,10 @@ function handleEditUserInfo(index: number, row: UserInfo) {
   </div>
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .pagination-container {
   display: flex;
   justify-content: center;
   margin-top: 20px;
-}
-// 自定义switch样式
-.customSwitch {
-  .el-switch__label--left {
-    position: relative;
-    left: 80px;
-    color: #fff;
-    z-index: -1111;
-    span {
-      width: 60px;
-    }
-  }
-  .el-switch__label--right {
-    position: relative;
-    right: 80px;
-    color: #fff;
-    z-index: -1111;
-    span {
-      display: inline-block;
-      width: 60px;
-    }
-  }
-  .el-switch__core {
-    width: 65px !important;
-  }
-  .el-switch__label--right.is-active {
-    z-index: 10;
-    color: #fff !important;
-  }
-  .el-switch__label--left.is-active {
-    z-index: 10;
-    color: #fff !important;
-  }
 }
 </style>

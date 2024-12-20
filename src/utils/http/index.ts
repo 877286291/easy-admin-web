@@ -131,7 +131,7 @@ class PureHttp {
         NProgress.done();
         if (response.data.code === 1002) {
           removeToken();
-          router.push("/login");
+          router.push("/login").then(_ => {});
           return;
         }
         if (response.data.code != 200) {

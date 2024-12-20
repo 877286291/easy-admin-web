@@ -46,6 +46,7 @@ function confirmClick() {
 function closeDrawer() {
   emit("update:drawerVisible", false);
 }
+
 const getRoles = (userId?: string) => {
   userRoles.value = [];
   getRolesByUserId(userId).then(response => {
@@ -62,10 +63,10 @@ const getRoles = (userId?: string) => {
   <!-- 使用 localDrawerVisible 进行双向绑定 -->
   <el-drawer
     v-model="localDrawerVisible"
+    :destroy-on-close="true"
     :with-header="true"
     direction="rtl"
     size="35%"
-    :destroy-on-close="true"
     @close="closeDrawer"
   >
     <!-- 抽屉的头部 -->
@@ -110,9 +111,9 @@ const getRoles = (userId?: string) => {
       <el-form-item label="角色">
         <el-select
           v-model="userRoles"
+          multiple
           placeholder="请选择角色"
           size="default"
-          multiple
         >
           <el-option
             v-for="item in roleList"
@@ -123,26 +124,22 @@ const getRoles = (userId?: string) => {
         </el-select>
       </el-form-item>
       <el-row :gutter="20">
-        <el-col :span="11"
-          ><el-form-item label="性别">
-            <re-segmented
-              :options="genderOptions"
-              :resize="true"
-            /> </el-form-item
-        ></el-col>
-        <el-col :span="11"
-          ><el-form-item label="用户状态">
-            <el-switch
-              v-model="localUserInfo.enabled"
-              class="customSwitch2"
-              style="
-                --el-switch-on-color: #6abe39;
-                --el-switch-off-color: #e84749;
-              "
-              active-text="已启用"
-              inactive-text="已禁用"
-            /> </el-form-item
-        ></el-col>
+        <el-col :span="11">
+          <el-form-item label="性别">
+            <re-segmented :options="genderOptions" :resize="true" />
+          </el-form-item>
+        </el-col>
+        <el-col :span="11">
+          <el-form-item label="用户状态">
+            <div class="custom-switch">
+              <el-switch
+                v-model="localUserInfo.enabled"
+                active-text="已启用"
+                inactive-text="已禁用"
+              />
+            </div>
+          </el-form-item>
+        </el-col>
       </el-row>
     </el-form>
 
@@ -156,43 +153,11 @@ const getRoles = (userId?: string) => {
   </el-drawer>
 </template>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .drawer-footer {
   display: flex;
   justify-content: flex-end;
   gap: 10px;
   padding: 10px 0;
-}
-.customSwitch2 {
-  .el-switch__label--left {
-    position: relative;
-    left: 80px;
-    color: #fff;
-    z-index: -1111;
-    span {
-      width: 60px;
-    }
-  }
-  .el-switch__label--right {
-    position: relative;
-    right: 80px;
-    color: #fff;
-    z-index: -1111;
-    span {
-      display: inline-block;
-      width: 60px;
-    }
-  }
-  .el-switch__core {
-    width: 65px !important;
-  }
-  .el-switch__label--right.is-active {
-    z-index: 10;
-    color: #fff !important;
-  }
-  .el-switch__label--left.is-active {
-    z-index: 10;
-    color: #fff !important;
-  }
 }
 </style>
